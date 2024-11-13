@@ -150,7 +150,7 @@ def main():
         if button:
             pdf_path = save_uploadedfile(pdf_doc)
 
-    if pdf_doc and button:
+    if pdf_doc and button and api_key:
         nIndex = 0
         for filename in os.listdir(temp_dir):
             with st.spinner("PDF 문서 정리 중"):
