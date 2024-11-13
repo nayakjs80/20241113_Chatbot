@@ -150,29 +150,30 @@ def main():
         if button:
             pdf_path = save_uploadedfile(pdf_doc)
 
-    if pdf_doc and button and api_key:
-        nIndex = 0
-        for filename in os.listdir(temp_dir):
-            with st.spinner("PDF 문서 정리 중"):
-                pdf_path = os.path.join(temp_dir, filename)
-                st.text(str(nIndex) + "번째 File : " + pdf_path)
-                nIndex = nIndex + 1
-                pdf_paths.append(pdf_path)
-
-        with st.spinner("PDF 문서 저장 중"):
-            pdf_document = pdf_to_documents(pdf_paths)
-            smaller_documents = chunk_documents(pdf_document)
-            save_to_vector_store(smaller_documents)
-
-    user_question = st.text_input("PDF 문서에 대해서 질문해 주세요", placeholder="무순위 청약 시에도 부부 중복신청이 가능한가요?")
-
-    if user_question:
-        st.write("사용자 질문 받음..")
-        response, context = process_question(user_question)
-        st.write(response)
-        for document in context:
-            with st.expander("관련 문서"):
-                st.write(document.page_content)
+    with api_key:
+        if pdf_doc and button:
+            nIndex = 0
+            for filename in os.listdir(temp_dir):
+                with st.spinner("PDF 문서 정리 중"):
+                    pdf_path = os.path.join(temp_dir, filename)
+                    st.text(str(nIndex) + "번째 File : " + pdf_path)
+                    nIndex = nIndex + 1
+                    pdf_paths.append(pdf_path)
+    
+            with st.spinner("PDF 문서 저장 중"):
+                pdf_document = pdf_to_documents(pdf_paths)
+                smaller_documents = chunk_documents(pdf_document)
+                save_to_vector_store(smaller_documents)
+    
+        user_question = st.text_input("PDF 문서에 대해서 질문해 주세요", placeholder="무순위 청약 시에도 부부 중복신청이 가능한가요?")
+    
+        if user_question:
+            st.write("사용자 질문 받음..")
+            response, context = process_question(user_question)
+            st.write(response)
+            for document in context:
+                with st.expander("관련 문서"):
+                    st.write(document.page_content)
 
 if __name__ == "__main__":
     main()
