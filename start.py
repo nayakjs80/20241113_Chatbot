@@ -150,7 +150,7 @@ def main():
         if button:
             pdf_path = save_uploadedfile(pdf_doc)
 
-    with api_key:
+    if api_key:
         if pdf_doc and button:
             nIndex = 0
             for filename in os.listdir(temp_dir):
